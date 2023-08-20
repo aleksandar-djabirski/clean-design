@@ -33,10 +33,14 @@ namespace Claims.Infrastructure
 
             InitializeCosmosClientInstanceAsync(cosmosSettings).GetAwaiter().GetResult();
 
-            services.AddSingleton<CosmosDbService<Claim>>(provider =>
-                new CosmosDbService<Claim>(client, cosmosSettings.DatabaseName));
-            services.AddSingleton<CosmosDbService<Cover>>(provider =>
-                new CosmosDbService<Cover>(client, cosmosSettings.DatabaseName));
+            //services.AddSingleton<CosmosDbService<Claim>>(provider =>
+            //    new CosmosDbService<Claim>(client, cosmosSettings.DatabaseName));
+            //services.AddSingleton<CosmosDbService<Cover>>(provider =>
+            //    new CosmosDbService<Cover>(client, cosmosSettings.DatabaseName));
+
+            services.AddSingleton<ICosmosDbServiceFactory>(provider =>
+        new CosmosDbServiceFactory(client, cosmosSettings.DatabaseName));
+
 
             // EF setup
             services.AddDbContext<AuditDbContext>(options =>

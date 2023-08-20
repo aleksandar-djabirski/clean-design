@@ -1,5 +1,6 @@
 ﻿using Claims.Application.Interfaces.Repositories;
 using Claims.Domain.Entities;
+using Claims.Infrastructure.Interfaces;
 using Microsoft.Azure.Cosmos;
 
 namespace Claims.Infrastructure.Repositories
@@ -8,19 +9,19 @@ namespace Claims.Infrastructure.Repositories
     {
         private readonly CosmosDbService<Cover> _service;
 
-        public CoverRepository(CosmosDbService<Cover> service)
+        public CoverRepository(ICosmosDbServiceFactory serviceFactory)
         {
-            _service = service ?? throw new ArgumentNullException(nameof(service));
+            _service = serviceFactory.Create<Cover>();
         }
 
         public async Task<IEnumerable<Cover>> GetAllAsync()
         {
-            return await _service.GetAllAsync<Cover>();
+            return await _service.GetAllAsync();
         }
 
         public async Task<Cover> GetByIdAsync(string id)
         {
-            return await _service.GetByIdAsync<Cover>(id);
+            return await _service.GetByIdAsync(id);
         }
 
         public async Task AddAsync(Cover cover)

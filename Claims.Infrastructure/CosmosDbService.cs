@@ -16,7 +16,7 @@ namespace Claims.Infrastructure
             _container = _database.GetContainer(containerName);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>() where T : class
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             List<T> results = new List<T>();
             FeedIterator<T> iterator = _container.GetItemQueryIterator<T>(new QueryDefinition("SELECT * FROM c"));
@@ -30,7 +30,7 @@ namespace Claims.Infrastructure
             return results;
         }
 
-        public async Task<T> GetByIdAsync<T>(string id) where T : class
+        public async Task<T> GetByIdAsync(string id)
         {
             try
             {
@@ -43,19 +43,19 @@ namespace Claims.Infrastructure
             }
         }
 
-        public async Task AddAsync<T>(T item) where T : class
+        public async Task AddAsync(T item)
         {
             await _container.CreateItemAsync(item);
         }
 
-        public async Task UpdateAsync<T>(string id, T item) where T : class
+        public async Task UpdateAsync(string id, T item)
         {
             await _container.UpsertItemAsync(item, new PartitionKey(id));
         }
 
         public async Task DeleteAsync(string id)
         {
-            await _container.DeleteItemAsync<object>(id, new PartitionKey(id));
+            await _container.DeleteItemAsync<T>(id, new PartitionKey(id));
         }
     }
 }
